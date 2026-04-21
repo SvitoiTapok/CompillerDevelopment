@@ -1,4 +1,4 @@
-
+package parcer;
 
 import parcer.ast.expression.AssignExpression;
 import parcer.ast.expression.BinaryExpression;

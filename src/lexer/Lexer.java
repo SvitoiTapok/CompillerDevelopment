@@ -14,6 +14,7 @@ public class Lexer {
     private int length;
     private int line;
     private int pos;
+    private int debugPos;
 //                case "var":
 //                        tokens.add(new lexer.Token(lexer.TokenType.VAR, word, start));
 //                break;
@@ -38,7 +39,9 @@ public class Lexer {
     private void next(){
         if(str.charAt(pos) == '\n'){
             line++;
+            debugPos = -1;
         }
+        debugPos++;
         pos++;
     }
     public Collection<Token> Tokenize() throws Exception {
@@ -73,7 +76,7 @@ public class Lexer {
         int start = pos;
         while (Character.isDigit(peek()))
             next();
-        tokens.add(new Token(TokenType.NUMBER, str.substring(start, pos), line, start));
+        tokens.add(new Token(TokenType.NUMBER, str.substring(start, pos), line, debugPos));
     }
     private void TokenizeWord(List<Token> tokens){
         int start = pos;
@@ -82,54 +85,79 @@ public class Lexer {
         String word = str.substring(start, pos);
         switch (word){
             case "var":
-                tokens.add(new Token(TokenType.VAR, word,line,  start));
+                tokens.add(new Token(TokenType.VAR, word,line,  debugPos));
                 break;
             case "print":
-                tokens.add(new Token(TokenType.PRINT, word,line,  start));
+                tokens.add(new Token(TokenType.PRINT, word,line,  debugPos));
                 break;
             case "if":
-                tokens.add(new Token(TokenType.IF, word,line,  start));
+                tokens.add(new Token(TokenType.IF, word,line,  debugPos));
                 break;
             case "while":
-                tokens.add(new Token(TokenType.WHILE, word,line,  start));
+                tokens.add(new Token(TokenType.WHILE, word,line,  debugPos));
                 break;
             case "else":
-                tokens.add(new Token(TokenType.ELSE, word,line,  start));
+                tokens.add(new Token(TokenType.ELSE, word,line,  debugPos));
                 break;
             default:
-                tokens.add(new Token(TokenType.ID, word,line,  start));
+                tokens.add(new Token(TokenType.ID, word,line,  debugPos));
         }
     }
     private void TokenizeOperator(List<Token> tokens) throws Exception{
-        int start = pos;
         char x = peek();
         switch (x){
             case '+':
                 next();
-                tokens.add(new Token(TokenType.PLUS, "+",line,  start));
+                tokens.add(new Token(TokenType.PLUS, "+",line,  debugPos));
                 break;
             case '-':
                 next();
-                tokens.add(new Token(TokenType.MINUS, "-",line,  start));
+                tokens.add(new Token(TokenType.MINUS, "-",line,  debugPos));
                 break;
             case '*':
                 next();
-                tokens.add(new Token(TokenType.STAR, "*",line,  start));
+                tokens.add(new Token(TokenType.STAR, "*",line,  debugPos));
                 break;
             case '/':
                 next();
-                tokens.add(new Token(TokenType.SLASH, "/",line,  start));
+                tokens.add(new Token(TokenType.SLASH, "/",line,  debugPos));
                 break;
             case '=':
                 next();
-                tokens.add(new Token(TokenType.EQ, "=",line,  start));
+                if(peek()=='='){
+                    next();
+                    tokens.add(new Token(TokenType.EQEQ, "==", line, debugPos));
+                }else {
+                    tokens.add(new Token(TokenType.EQ, "=",line,  debugPos));
+                }
+
+
                 break;
             case ';':
                 next();
-                tokens.add(new Token(TokenType.SEMICOLON, ";",line,  start));
+                tokens.add(new Token(TokenType.SEMICOLON, ";",line,  debugPos));
+                break;
+            case '(':
+                next();
+                tokens.add(new Token(TokenType.LPAREN, "(",line,  debugPos));
+                break;
+            case ')':
+                next();
+                tokens.add(new Token(TokenType.RPAREN, "(",line,  debugPos));
+                break;
+            case '!':
+                next();
+                if(peek()=='='){
+                    next();
+                    tokens.add(new Token(TokenType.NEQ, "!=", line, debugPos));
+                }
+                else {
+                    tokens.add(new Token(TokenType.NOT, "(",line,  debugPos));
+                }
+
                 break;
             default:
-                throw new Exception("Unexpected character " + x + " at position " + pos);
+                throw new Exception("Unexpected character " + x + " at position " + debugPos);
         }
     }
 }

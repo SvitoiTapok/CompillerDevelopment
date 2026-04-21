@@ -11,7 +11,7 @@ public enum TokenType {
     PLUS, MINUS, STAR, SLASH,
     EQ, EQEQ, NEQ,
     LT, GT, LTEQ, GTEQ,
-    AND, OR, NEG,
+    AND, OR, NOT,
 
     LPAREN, RPAREN,
     LBRACE, RBRACE,

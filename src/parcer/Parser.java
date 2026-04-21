@@ -208,7 +208,7 @@ public class Parser {
 
     // 8. Унарные операции (!, -)
     private Expression parseUnary() {
-        if (match(TokenType.NEG, TokenType.MINUS)) {
+        if (match(TokenType.NOT, TokenType.MINUS)) {
             TokenType op = previous().getType();
             Expression right = parseUnary();
             return new UnaryExpression(op, right);
@@ -235,7 +235,7 @@ public class Parser {
         }
 
         Token token = peek();
-        throw new RuntimeException("[Parser Error] Line " + token.getLine() +
+        throw new RuntimeException("[Parser Error] Line " + token.getLine() + "pos " + token.getPos() +
                 " Ожидается выражение.");
     }
 
@@ -274,7 +274,7 @@ public class Parser {
     private Token consume(TokenType type, String message) {
         if (check(type)) return advance();
         Token token = peek();
-        throw new RuntimeException("[Parser Error] Line " + token.getLine() +
+        throw new RuntimeException("[Parser Error] Line " + token.getLine() + " pos " + token.getPos() +
                 ": " + message);
     }
 }

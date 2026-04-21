@@ -12,7 +12,8 @@ import java.util.List;
 public class Lexer {
     private String str;
     private int length;
-    private int pos=0;
+    private int line;
+    private int pos;
 //                case "var":
 //                        tokens.add(new lexer.Token(lexer.TokenType.VAR, word, start));
 //                break;
@@ -28,27 +29,27 @@ public class Lexer {
 //            case "else":
 //                    tokens.add(new lexer.Token(lexer.TokenType.ELSE, word, start));
 
-    private char Peek(){
+    private char peek(){
         if(pos == length){
             return '\0';
         }
         return str.charAt(pos);
     }
-    private char Next(){
-        if(pos == length){
-            return '\0';
+    private void next(){
+        if(str.charAt(pos) == '\n'){
+            line++;
         }
-        return str.charAt(pos++);
+        pos++;
     }
     public Collection<Token> Tokenize() throws Exception {
         List<Token> tokens = new ArrayList<>();
         while(pos < length){
             char ch = str.charAt(pos);
-                var current = Peek();
+                var current = peek();
 
                 if (Character.isWhitespace(ch))
                 {
-                    Next();
+                    next();
                     continue;
                 }
 
@@ -70,62 +71,62 @@ public class Lexer {
     }
     private void TokenizeNumber(List<Token> tokens){
         int start = pos;
-        while (Character.isDigit(Peek()))
-            Next();
-        tokens.add(new Token(TokenType.NUMBER, str.substring(start, pos), start));
+        while (Character.isDigit(peek()))
+            next();
+        tokens.add(new Token(TokenType.NUMBER, str.substring(start, pos), line, start));
     }
     private void TokenizeWord(List<Token> tokens){
         int start = pos;
-        while (Character.isLetterOrDigit(Peek()))
-            Next();
+        while (Character.isLetterOrDigit(peek()))
+            next();
         String word = str.substring(start, pos);
         switch (word){
             case "var":
-                tokens.add(new Token(TokenType.VAR, word, start));
+                tokens.add(new Token(TokenType.VAR, word,line,  start));
                 break;
             case "print":
-                tokens.add(new Token(TokenType.PRINT, word, start));
+                tokens.add(new Token(TokenType.PRINT, word,line,  start));
                 break;
             case "if":
-                tokens.add(new Token(TokenType.IF, word, start));
+                tokens.add(new Token(TokenType.IF, word,line,  start));
                 break;
             case "while":
-                tokens.add(new Token(TokenType.WHILE, word, start));
+                tokens.add(new Token(TokenType.WHILE, word,line,  start));
                 break;
             case "else":
-                tokens.add(new Token(TokenType.ELSE, word, start));
+                tokens.add(new Token(TokenType.ELSE, word,line,  start));
                 break;
             default:
-                tokens.add(new Token(TokenType.ID, word, start));
+                tokens.add(new Token(TokenType.ID, word,line,  start));
         }
     }
     private void TokenizeOperator(List<Token> tokens) throws Exception{
         int start = pos;
-        char x = Peek();
+        char x = peek();
         switch (x){
             case '+':
-                Next();
-                tokens.add(new Token(TokenType.PLUS, "+", start));
+                next();
+                tokens.add(new Token(TokenType.PLUS, "+",line,  start));
                 break;
             case '-':
-                Next();
-                tokens.add(new Token(TokenType.MINUS, "-", start));
+                next();
+                tokens.add(new Token(TokenType.MINUS, "-",line,  start));
                 break;
             case '*':
-                Next();
-                tokens.add(new Token(TokenType.STAR, "*", start));
+                next();
+                tokens.add(new Token(TokenType.STAR, "*",line,  start));
                 break;
             case '/':
-                Next();
-                tokens.add(new Token(TokenType.SLASH, "/", start));
+                next();
+                tokens.add(new Token(TokenType.SLASH, "/",line,  start));
                 break;
             case '=':
-                Next();
-                tokens.add(new Token(TokenType.EQ, "=", start));
+                next();
+                tokens.add(new Token(TokenType.EQ, "=",line,  start));
                 break;
             case ';':
-                Next();
-                tokens.add(new Token(TokenType.SEMICOLON, ";", start));
+                next();
+                tokens.add(new Token(TokenType.SEMICOLON, ";",line,  start));
                 break;
             default:
                 throw new Exception("Unexpected character " + x + " at position " + pos);

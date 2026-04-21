@@ -10,6 +10,7 @@ import lombok.ToString;
 public class Token {
     private TokenType type;
     private String value;
+    private int line;
     private int pos;
 
 }

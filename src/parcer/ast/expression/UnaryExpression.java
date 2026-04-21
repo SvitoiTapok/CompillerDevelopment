@@ -1,6 +1,5 @@
-package parcer.ast;
+package parcer.ast.expression;
 
-import lexer.Token;
 import lexer.TokenType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

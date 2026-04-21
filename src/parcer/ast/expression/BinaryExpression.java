@@ -1,10 +1,8 @@
-package parcer.ast;
+package parcer.ast.expression;
 
 import lexer.TokenType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.util.function.BinaryOperator;
 
 @Getter
 @AllArgsConstructor
